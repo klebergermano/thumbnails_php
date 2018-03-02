@@ -60,16 +60,16 @@ class CreateThumbnail extends Image {
     
         $this->image_p = imagecreatetruecolor($this->maxWidth, $this->maxHeight);
         
-        if ($this->getExtension() == '.gif') {
-            $image = imagecreatefromgif($this->getFolderFilename() . '/' . $this->getFilename());
+        if ($this->getExtension() === '.gif') {
+            $image = imagecreatefromgif($this->getFolderFilename() . $this->getFilename());
+         
+            
+        } else if ($this->getExtension() === '.jpg') {
+            $image = imagecreatefromjpeg($this->getFolderFilename(). $this->getFilename());
         
             
-        } else if ($this->getExtension() == '.jpg') {
-            $image = imagecreatefromjpeg($this->getFolderFilename() . '/' . $this->getFilename());
-        
-            
-        } else if ($this->getExtension() == '.png') {
-            $image = imagecreatefrompng($this->getFolderFilename() . '/' . $this->getFilename());
+        } else if ($this->getExtension() === '.png') {
+            $image = imagecreatefrompng($this->getFolderFilename(). $this->getFilename());
             imagealphablending($this->image_p, false);
             imagesavealpha($this->image_p, true);
             $transparent = imagecolorallocatealpha($this->image_p, 255, 255, 255, 127);

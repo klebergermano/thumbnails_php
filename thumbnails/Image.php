@@ -22,7 +22,7 @@ class Image {
 
     private function setImageInfo() {
 
-        $imageinfo = getimagesize($this->folderFilename.'/'.$this->filename);
+        $imageinfo = getimagesize($this->folderFilename.$this->filename);
         $this->width = $imageinfo[0];
         $this->height = $imageinfo[1];
         $this->numExt = $imageinfo[2]; //returns '0/UNKNOWN', '1/GIF', '2/JPEG' , '3/PNG' ... 16
