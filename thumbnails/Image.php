@@ -9,27 +9,77 @@
  */
 class Image {
 
-    private $filename, $width, $height, $extension, $mime, $bits, $channels, $imgWidhHeight;
-    private $url;
-    
-    function __construct($filename) {
+    private $filename, $width, $height, $extension, $numExt, $mime, $bits, $channels, $imgWidhHeight;
+    private $folderFilename;
+
+    function __construct($folderFilename, $filename) {
+        
+        $this->folderFilename = $folderFilename;
         $this->filename = $filename;
         $this->setImageInfo();
+        $this->convExtension();
     }
 
-        private function setImageInfo() {
+    private function setImageInfo() {
 
-        $imageinfo = getimagesize($this->filename);      
+        $imageinfo = getimagesize($this->folderFilename.'/'.$this->filename);
         $this->width = $imageinfo[0];
         $this->height = $imageinfo[1];
-        $this->extension = $imageinfo[2]; //returns '0/UNKNOWN', '1/GIF', '2/JPEG' , '3/PNG' ... 16
+        $this->numExt = $imageinfo[2]; //returns '0/UNKNOWN', '1/GIF', '2/JPEG' , '3/PNG' ... 16
         $this->imgWidhHeight = $imageinfo[3];
         $this->bits = $imageinfo['bits'];
-        $this->channels = $imageinfo['channels'];
+        //$this->channels = $imageinfo['channels'];
         $this->mime = $imageinfo['mime'];
     }
-    
+
+    private function convExtension() {
+
+        switch ($this->getNumExt()) {
+            case 1: $this->setExtension(".gif");
+                break;
+            case 2: $this->setExtension(".jpg");
+                break;
+            case 3: $this->setExtension(".png");
+                break;
+            case 4 : $this->setExtension(".swf");
+                break;
+            case 5: $this->setExtension(".psd");
+                break;
+            case 6: $this->setExtension(".bmp");
+                break;
+            case 7: $this->setExtension(".tiff");
+                break; //tiff ii               
+            case 8: $this->setExtension(".tiff");
+                break; //tiff MM               
+            case 9: $this->setExtension(".jpc");
+                break;
+            case 10: $this->setExtension(".jp2");
+                break;
+            case 11: $this->setExtension(".jpx");
+                break;
+            case 12: $this->setExtension(".jb2");
+                break;
+            case 13: $this->setExtension(".swc");
+                break;
+            case 14: $this->setExtension(".iff");
+                break;
+            case 15: $this->setExtension(".wbmp");
+                break;
+            case 16: $this->setExtension(".xbm");
+                break;
+            case 17: $this->setExtension(".ico");
+                break;
+            case 18: $this->setExtension(".count");
+                break;
+            
+            default: $this->setExtension("undefined");
+        }
+    }
+
     //Getters
+function getFolderFilename(){
+    return $this->folderFilename;
+}
     function getFilename() {
         return $this->filename;
     }
@@ -40,6 +90,10 @@ class Image {
 
     function getHeight() {
         return $this->height;
+    }
+
+    function getNumExt() {
+        return $this->numExt;
     }
 
     function getExtension() {
@@ -65,8 +119,7 @@ class Image {
     function getUrl() {
         return $this->url;
     }
-    
-    
+
     //Setters
     protected function setFilename($filename) {
         $this->filename = $filename;
@@ -82,6 +135,10 @@ class Image {
 
     protected function setExtension($extension) {
         $this->extension = $extension;
+    }
+
+    protected function setNumExt($numExt) {
+        $this->numExt = $numExt;
     }
 
     protected function setMime($mime) {
@@ -100,11 +157,8 @@ class Image {
         $this->imgWidhHeight = $imgWidhHeight;
     }
 
-   protected function setUrl($url) {
+    protected function setUrl($url) {
         $this->url = $url;
     }
-
-
-
 
 }

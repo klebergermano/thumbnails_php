@@ -11,31 +11,32 @@
   // @author Kleber Germano <Kleberus> kleber_lsgermano@hotmail.com
  */
 require_once "Image.php";
-class CreateThumbnail extends Image{
+
+class CreateThumbnail extends Image {
 
 //atributos
-    private $folder;
+    private $folderThumbnail;
     private $maxWidth;
     private $maxHeight;
     private $ratio_orig;
     private $image_p;
-    private $outputFilename;
+    private $nameThumbnail;
     private $quality;
 
     //métodos
 
-    public function __construct($folder, $filename, $maxWidth, $maxHeight, $outputFilename, $quality = 100) {
-        parent::__construct($filename);
-        
-        $this->folder = $folder;
-        $this->filename = $filename;
+    public function __construct($folderFilename, $filename, $maxWidth, $maxHeight, $folderThumbnail, $nameThumbnail, $quality = 100) {
+        parent::__construct($folderFilename, $filename);
+
+        $this->folderThumbnail = $folderThumbnail;
         $this->maxWidth = $maxWidth;
         $this->maxHeight = $maxHeight;
-        $this->outputFilename = $outputFilename;
+        $this->nameThumbnail = $nameThumbnail;
         $this->quality = $quality;
-
+        
         $this->ratioImage();
         $this->resample();
+        $this->extNameThumbnail();
         $this->outputImg();
     }
 
@@ -56,18 +57,58 @@ class CreateThumbnail extends Image{
     }
 
     public function resample() {
-
+    
         $this->image_p = imagecreatetruecolor($this->maxWidth, $this->maxHeight);
         
-        $image = imagecreatefromjpeg($this->filename);
-        imagecopyresampled($this->image_p, $image, 0, 0, 0, 0, $this-> maxWidth, $this->maxHeight, $this->getWidth(), $this->getHeight());
-    
+        if ($this->getExtension() == '.gif') {
+            $image = imagecreatefromgif($this->getFolderFilename() . '/' . $this->getFilename());
         
-    }
+            
+        } else if ($this->getExtension() == '.jpg') {
+            $image = imagecreatefromjpeg($this->getFolderFilename() . '/' . $this->getFilename());
+        
+            
+        } else if ($this->getExtension() == '.png') {
+            $image = imagecreatefrompng($this->getFolderFilename() . '/' . $this->getFilename());
+            imagealphablending($this->image_p, false);
+            imagesavealpha($this->image_p, true);
+            $transparent = imagecolorallocatealpha($this->image_p, 255, 255, 255, 127);
+            imagefilledrectangle($image, 0, 0, $this->getWidth(), $this->getHeight(), $transparent);
+       
+            }else{
+                         throw new Exception("Formato da imagem <<< ".$this->getExtension()."  >>> não suportado por favor utilize os formatos JPG/PNG/GIF");
+
+        }
+
+        imagecopyresampled($this->image_p, $image, 0, 0, 0, 0, $this->maxWidth, $this->maxHeight, $this->getWidth(), $this->getHeight());
+    
+
+        
+        }
 
     public function outputImg() {
-        imagejpeg($this->image_p, $this->folder.'/'.$this->outputFilename, $this->quality);
+
+        if ($this->getNumExt() == 1) {
+
+            imagegif($this->image_p, $this->folderThumbnail . '/' . $this->nameThumbnail . $this->getExtension(), $this->quality);
+        }
+
+        if ($this->getNumExt() == 2) {
+
+            imagejpeg($this->image_p, $this->folderThumbnail . '/' . $this->nameThumbnail . $this->getExtension(), $this->quality);
+        }
+
+        if ($this->getNumExt() == 3) {
+            imagepng($this->image_p, $this->folderThumbnail . '/' . $this->nameThumbnail . $this->getExtension(), 9);
+        }
     }
 
+    private function extNameThumbnail() {
+
+        $arrExt = explode('.', $this->nameThumbnail);
+        if (!empty($arrExt[1])) {
+            $this->setExtension('');
+        }
+    }
 
 }
