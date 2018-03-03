@@ -33,14 +33,18 @@ class CreateThumbnail extends Image {
         $this->maxHeight = $maxHeight;
         $this->nameThumbnail = $nameThumbnail;
         $this->quality = $quality;
-        
+     
+    }
+    public function makeThumb(){
+        $this->imageInfo();
         $this->ratioImage();
         $this->resample();
         $this->extNameThumbnail();
         $this->outputImg();
     }
 
-    public function ratioImage() {
+
+    protected function ratioImage() {
 
         $this->ratio_orig = $this->getWidth() / $this->getHeight();
 
@@ -56,37 +60,28 @@ class CreateThumbnail extends Image {
         }
     }
 
-    public function resample() {
-    
+    protected function resample() {
+
         $this->image_p = imagecreatetruecolor($this->maxWidth, $this->maxHeight);
-        
+
         if ($this->getExtension() === '.gif') {
             $image = imagecreatefromgif($this->getFolderFilename() . $this->getFilename());
-         
-            
         } else if ($this->getExtension() === '.jpg') {
-            $image = imagecreatefromjpeg($this->getFolderFilename(). $this->getFilename());
-        
-            
+            $image = imagecreatefromjpeg($this->getFolderFilename() . $this->getFilename());
         } else if ($this->getExtension() === '.png') {
-            $image = imagecreatefrompng($this->getFolderFilename(). $this->getFilename());
+            $image = imagecreatefrompng($this->getFolderFilename() . $this->getFilename());
             imagealphablending($this->image_p, false);
             imagesavealpha($this->image_p, true);
             $transparent = imagecolorallocatealpha($this->image_p, 255, 255, 255, 127);
             imagefilledrectangle($image, 0, 0, $this->getWidth(), $this->getHeight(), $transparent);
-       
-            }else{
-                         throw new Exception("Formato da imagem <<< ".$this->getExtension()."  >>> não suportado por favor utilize os formatos JPG/PNG/GIF");
-
+        } else {
+            throw new Exception("Formato da imagem <<< " . $this->getExtension() . "  >>> não suportado por favor utilize os formatos JPG/PNG/GIF");
         }
 
         imagecopyresampled($this->image_p, $image, 0, 0, 0, 0, $this->maxWidth, $this->maxHeight, $this->getWidth(), $this->getHeight());
-    
+    }
 
-        
-        }
-
-    public function outputImg() {
+    protected function outputImg() {
 
         if ($this->getNumExt() == 1) {
 
@@ -103,12 +98,20 @@ class CreateThumbnail extends Image {
         }
     }
 
-    private function extNameThumbnail() {
+    protected function extNameThumbnail() {
 
         $arrExt = explode('.', $this->nameThumbnail);
         if (!empty($arrExt[1])) {
             $this->setExtension('');
         }
     }
+    
+    
+    
+    //SETTERS
+    protected function setNameThumbnail($nameThumbnail){
+        $this->nameThumbnail = $nameThumbnail;
+    }
+    //GETTERS
 
 }

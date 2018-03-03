@@ -16,11 +16,9 @@ class Image {
         
         $this->folderFilename = $folderFilename;
         $this->filename = $filename;
-        $this->setImageInfo();
-        $this->convExtension();
     }
 
-    private function setImageInfo() {
+    public function imageInfo() {
 
         $imageinfo = getimagesize($this->folderFilename.$this->filename);
         $this->width = $imageinfo[0];
@@ -30,6 +28,9 @@ class Image {
         $this->bits = $imageinfo['bits'];
         //$this->channels = $imageinfo['channels'];
         $this->mime = $imageinfo['mime'];
+        
+        $this->convExtension();
+
     }
 
     private function convExtension() {
@@ -121,6 +122,9 @@ function getFolderFilename(){
     }
 
     //Setters
+        protected function setFolderFilename($folderFilename) {
+        $this->folderFilename = $folderFilename;
+    }
     protected function setFilename($filename) {
         $this->filename = $filename;
     }
