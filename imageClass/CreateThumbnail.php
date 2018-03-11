@@ -85,16 +85,17 @@ class CreateThumbnail extends Image {
 
         if ($this->getNumExt() == 1) {
 
-            imagegif($this->image_p, $this->folderThumbnail . '/' . $this->nameThumbnail . $this->getExtension(), $this->quality);
+            imagegif($this->image_p, $this->folderThumbnail  . $this->nameThumbnail . $this->getExtension(), $this->quality);
         }
 
         if ($this->getNumExt() == 2) {
 
-            imagejpeg($this->image_p, $this->folderThumbnail . '/' . $this->nameThumbnail . $this->getExtension(), $this->quality);
+            
+            imagejpeg($this->image_p, $this->folderThumbnail . $this->nameThumbnail . $this->getExtension(), $this->quality);
         }
 
         if ($this->getNumExt() == 3) {
-            imagepng($this->image_p, $this->folderThumbnail . '/' . $this->nameThumbnail . $this->getExtension(), 9);
+            imagepng($this->image_p, $this->folderThumbnail  . $this->nameThumbnail . $this->getExtension(), 9);
         }
     }
 
@@ -110,6 +111,9 @@ class CreateThumbnail extends Image {
     
     //SETTERS
     protected function setNameThumbnail($nameThumbnail){
+        $this->nameThumbnail = $nameThumbnail;
+    }
+       protected function setFolderThumbnail($nameThumbnail){
         $this->nameThumbnail = $nameThumbnail;
     }
     //GETTERS
